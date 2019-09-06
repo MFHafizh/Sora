@@ -8,7 +8,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -16,6 +19,10 @@ import (
 var template = "%s on %s. %s"
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		panic("Fail to load env")
+	}
 	port := ":8080"
 	router := httprouter.New()
 	router.POST("/payload", handlers)
@@ -33,7 +40,8 @@ func handlers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		panic(err)
 	}
 	serverURL := payload.ServerURL
-	jiraProject := "SP"
+	fmt.Println(os.Getenv("JIRA_PROJECT_KEY"))
+	jiraProject := os.Getenv("JIRA_PROJECT_KEY")
 	issues := sonarqube.GetIssues(serverURL, projectKey)
 	jiraIssues := jira.GetIssues(jiraProject)
 	for _, sonarIssue := range issues {

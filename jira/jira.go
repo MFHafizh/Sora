@@ -22,7 +22,7 @@ func initJiraClient() *jira.Client {
 		Password: os.Getenv("JIRA_TOKEN"),
 	}
 
-	jiraClient, err := jira.NewClient(tp.Client(), "https://mfhafizh.atlassian.net/")
+	jiraClient, err := jira.NewClient(tp.Client(), os.Getenv("JIRA_URL"))
 	if err != nil {
 		panic(err)
 	}
